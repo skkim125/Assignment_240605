@@ -9,15 +9,14 @@ import UIKit
 import Alamofire
 import SnapKit
 
-class ViewController: UIViewController {
+class LottoViewController: UIViewController {
     
-    let roundTextField: UITextField = {
+    lazy var roundTextField: UITextField = {
         let tf = UITextField()
         tf.borderStyle = .roundedRect
         tf.placeholder = "회차를 입력해주세요"
         tf.textAlignment = .center
-        tf.keyboardType = .numberPad
-        
+        tf.addTarget(self, action: #selector(getLottoInfo), for: .editingDidEndOnExit)
         return tf
     }()
     
@@ -28,16 +27,14 @@ class ViewController: UIViewController {
         return label
     }()
     
-    let lottoDatelabel: UILabel = {
+    lazy var lottoDatelabel: UILabel = {
         let label = UILabel()
-        label.text = "2020년20월20일"
         
         return label
     }()
     
-    let roundLabel: UILabel = {
+    lazy var roundLabel: UILabel = {
         let label = UILabel()
-        label.text = "888회"
         label.textColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
         label.textAlignment = .right
         label.font = .systemFont(ofSize: 32, weight: .bold)
@@ -65,71 +62,54 @@ class ViewController: UIViewController {
         return stackView
     }()
     
-    let numberlabel1: UILabel = {
+    lazy var numberlabel1: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .blue
         
         return label
     }()
     
-    let numberlabel2: UILabel = {
+    lazy var numberlabel2: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .red
         
         return label
     }()
     
-    let numberlabel3: UILabel = {
+    lazy var numberlabel3: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .brown
         
         return label
     }()
     
-    let numberlabel4: UILabel = {
+    lazy var numberlabel4: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .darkGray
         
         return label
     }()
     
-    func configureLottoLabelUI(view: UILabel, num: Int) -> UIView {
-        let label = view
-        
-        label.textAlignment = .center
-        label.text = "\(num)"
-        label.textColor = .white
-        label.backgroundColor = .black
-        
-        return view
-    }
-    
     lazy var numberlabel5: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "2"
         label.textColor = .white
         label.backgroundColor = .green
 
         return label
     }()
     
-    let numberlabel6: UILabel = {
+    lazy var numberlabel6: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .black
         
@@ -144,10 +124,9 @@ class ViewController: UIViewController {
         return view
     }()
     
-    let numberlabel7: UILabel = {
+    lazy var numberlabel7: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = "45"
         label.textColor = .white
         label.backgroundColor = .black
         
@@ -165,7 +144,7 @@ class ViewController: UIViewController {
     }()
     
     var numbers: [Int] = []
-    var round: Int = 1120
+    var round: Int = APIKey.round
     
     lazy var numberViews: [UIView] = [numberlabel1, numberlabel2, numberlabel3, numberlabel4, numberlabel5, numberlabel6, plusView, numberlabel7]
     
@@ -174,8 +153,11 @@ class ViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        roundTextField.delegate = self
+        
         configureHierarchy()
         configureLayout()
+        getLottoInfo()
     }
     
     func configureHierarchy() {
@@ -236,8 +218,6 @@ class ViewController: UIViewController {
                 print(make.height)
             }
             
-            print(item.frame.width)
-            print(item.frame.height)
             item.layer.masksToBounds = true
             item.layer.cornerRadius = 20
         }
@@ -250,12 +230,54 @@ class ViewController: UIViewController {
         }
     }
     
-    func getLottoInfo() {
+    @objc func getLottoInfo() {
+        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(APIKey.round)"
         
+        AF.request(url).responseDecodable(of: Lotto.self) { response in
+            switch response.result {
+            case .success(let value):
+                print(value)
+                self.roundLabel.text = "\(value.drwNo)회"
+                self.numberlabel1.text = "\(value.drwtNo1)"
+                self.numberlabel2.text = "\(value.drwtNo2)"
+                self.numberlabel3.text = "\(value.drwtNo3)"
+                self.numberlabel4.text = "\(value.drwtNo4)"
+                self.numberlabel5.text = "\(value.drwtNo5)"
+                self.numberlabel6.text = "\(value.drwtNo6)"
+                self.numberlabel7.text = "\(value.bnusNo)"
+                
+            case.failure(let error):
+                print(error)
+                self.roundTextField.text = nil
+                self.roundTextField.placeholder = "유효한 숫자만 입력해주세요"
+            }
+        }
         
     }
 }
 
-extension ViewController: UIPickerViewDelegate {
+struct Lotto: Decodable {
+    let drwNo: Int
+    let drwtNo1: Int
+    let drwtNo2: Int
+    let drwtNo3: Int
+    let drwtNo4: Int
+    let drwtNo5: Int
+    let drwtNo6: Int
+    let bnusNo: Int
+    let drwNoDate: String
+}
+
+extension LottoViewController: UITextFieldDelegate {
+    
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let text = textField.text {
+            APIKey.round = Int(text) ?? 0
+            getLottoInfo()
+        }
+    }
+    
     
 }
