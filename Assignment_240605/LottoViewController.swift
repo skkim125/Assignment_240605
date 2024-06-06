@@ -14,23 +14,42 @@ class LottoViewController: UIViewController {
     lazy var roundTextField: UITextField = {
         let tf = UITextField()
         tf.borderStyle = .roundedRect
-        tf.placeholder = "회차를 입력해주세요"
+        tf.placeholder = "회차를 선택해주세요"
         tf.textAlignment = .center
         tf.addTarget(self, action: #selector(getLottoInfo), for: .editingDidEndOnExit)
+        tf.inputView = roundPickerView
+        
         return tf
+    }()
+    
+    lazy var roundPickerView: UIPickerView = {
+        let picker = UIPickerView()
+        picker.backgroundColor = .clear
+        
+        return picker
     }()
     
     let infoNumberLabel: UILabel = {
         let label = UILabel()
         label.text = "당첨번호 안내"
+        label.font = .systemFont(ofSize: 16)
         
         return label
     }()
     
     lazy var lottoDatelabel: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .darkGray
         
         return label
+    }()
+    
+    lazy var dividerLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = .darkGray
+        
+        return view
     }()
     
     lazy var roundLabel: UILabel = {
@@ -144,7 +163,9 @@ class LottoViewController: UIViewController {
     }()
     
     var numbers: [Int] = []
-    var round: Int = LottoAPIKey.round
+    lazy var round: Int = 1122
+    lazy var currentRound: Int = LottoAPIKey.plusRound(&round)
+    lazy var lottoList: [String] = []
     
     lazy var numberViews: [UIView] = [numberlabel1, numberlabel2, numberlabel3, numberlabel4, numberlabel5, numberlabel6, plusView, numberlabel7]
     
@@ -152,19 +173,31 @@ class LottoViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        navigationItem.title = "로또 알아보기"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         
-        roundTextField.delegate = self
+//        roundTextField.delegate = self
+        roundPickerView.delegate = self
+        roundPickerView.dataSource = self
         
         configureHierarchy()
         configureLayout()
         getLottoInfo()
+        
+        for i in 0...round {
+            lottoList.append("\(i+1)")
+        }
+        lottoList.remove(at: lottoList.endIndex-1)
+        print(lottoList.count)
     }
     
     func configureHierarchy() {
         // MARK: addSubView()
         view.addSubview(roundTextField)
+        view.addSubview(roundPickerView)
         view.addSubview(infoNumberLabel)
         view.addSubview(lottoDatelabel)
+        view.addSubview(dividerLine)
         view.addSubview(roundLabel)
         view.addSubview(resultTextLabel)
         view.addSubview(lottoStackView)
@@ -177,14 +210,25 @@ class LottoViewController: UIViewController {
             make.height.equalTo(48)
         }
         
+        roundPickerView.snp.makeConstraints { make in
+            make.size.equalTo(roundTextField.snp.size)
+        }
+        
         infoNumberLabel.snp.makeConstraints { make in
             make.top.equalTo(roundTextField.snp.bottom).offset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
         
+        dividerLine.snp.makeConstraints { make in
+            make.top.equalTo(infoNumberLabel.snp.bottom).offset(8)
+            make.height.equalTo(2)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
+        }
+        
         lottoDatelabel.snp.makeConstraints { make in
             make.top.equalTo(roundTextField.snp.bottom).offset(20)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.bottom.equalTo(dividerLine.snp.top)
         }
         
         roundLabel.snp.makeConstraints { make in
@@ -215,7 +259,6 @@ class LottoViewController: UIViewController {
         for item in numberViews {
             item.snp.makeConstraints { make in
                 make.height.equalTo(item.snp.width)
-                print(make.height)
             }
             
             item.layer.masksToBounds = true
@@ -231,13 +274,15 @@ class LottoViewController: UIViewController {
     }
     
     @objc func getLottoInfo() {
-        let url = LottoAPIKey.lottoURL + "\(LottoAPIKey.round)"
+        let lottoRound = round
+        let url = LottoAPIKey.lottoURL + "\(lottoRound)"
         
         AF.request(url).responseDecodable(of: Lotto.self) { response in
             switch response.result {
             case .success(let value):
                 print(value)
                 self.roundLabel.text = "\(value.drwNo)회"
+                self.lottoDatelabel.text = "\(value.drwNoDate)"
                 self.numberlabel1.text = "\(value.drwtNo1)"
                 self.numberlabel2.text = "\(value.drwtNo2)"
                 self.numberlabel3.text = "\(value.drwtNo3)"
@@ -267,11 +312,36 @@ struct Lotto: Decodable {
     let drwNoDate: String
 }
 
-extension LottoViewController: UITextFieldDelegate {
+//extension LottoViewController: UITextFieldDelegate {
+//    
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        if let text = textField.text {
+//            round = Int(text) ?? 0
+//            getLottoInfo()
+//        }
+//    }
+//}
+
+
+extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if let text = textField.text {
-            LottoAPIKey.round = Int(text) ?? 0
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return lottoList.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return lottoList[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if let lottoR = Int(lottoList[row]){
+            print(lottoR)
+            round = lottoR
+            roundTextField.text = "\(lottoR)"
             getLottoInfo()
         }
     }

@@ -15,7 +15,7 @@ class BoxOfficeViewController: UIViewController {
        let tf = UITextField()
         tf.font = .systemFont(ofSize: 16)
         tf.textColor = .white
-        tf.attributedPlaceholder = NSAttributedString(string: "형식에 맞게 입력해주세요 ex) 20240506", attributes: [.foregroundColor: UIColor.lightGray])
+        tf.attributedPlaceholder = NSAttributedString(string: "형식에 맞게 입력해주세요 ex) \(date)", attributes: [.foregroundColor: UIColor.lightGray])
         tf.backgroundColor = .clear
         
         return tf
@@ -62,6 +62,8 @@ class BoxOfficeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        navigationItem.title = "박스오피스 알아보기"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         configureHierarchy()
         configureLayout()
@@ -79,7 +81,8 @@ class BoxOfficeViewController: UIViewController {
     func configureLayout() {
         
         textField.snp.makeConstraints { make in
-            make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(12)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(48)
         }
         
@@ -106,11 +109,13 @@ class BoxOfficeViewController: UIViewController {
     }
 
     @objc func getBoxofficeInfo() {
+        var boxofficeDate = date
+        
         guard let textdate = textField.text else { return }
         if !textdate.isEmpty {
-            date = textdate
+            boxofficeDate = textdate
         }
-        let url = "\(MovieAPIKey.moviewURL)?key=\(MovieAPIKey.movieKey)&targetDt=\(date)"
+        let url = "\(MovieAPIKey.moviewURL)?key=\(MovieAPIKey.movieKey)&targetDt=\(boxofficeDate)"
         
         AF.request(url).responseDecodable(of: Boxoffice.self) { response in
             switch response.result {
@@ -118,12 +123,12 @@ class BoxOfficeViewController: UIViewController {
                 self.movies = value.boxOfficeResult.dailyBoxOfficeList
                 self.tableView.isHidden = false
                 self.tableView.reloadData()
-                print(self.movies)
+                
             case.failure(let error):
                 self.textField.text = ""
-                self.textField.placeholder = "알맞은 형식을 입력해주세요 ex) 20240606"
+                self.textField.placeholder = "알맞은 형식을 입력해주세요 ex) \(self.date)"
                 self.tableView.isHidden = true
-                print("\(error)")
+                
             }
         }
     }

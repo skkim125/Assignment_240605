@@ -17,9 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let vc = BoxOfficeViewController()
+        let vc = LottoViewController()
+        let nav = UINavigationController(rootViewController: vc)
         // 가장 밑단의 뷰를 설정하는 코드 필요
-        window?.rootViewController = vc // storyboard의 entry point와 같음
+        window?.rootViewController = nav // storyboard의 entry point와 같음
         window?.makeKeyAndVisible()
     }
 
