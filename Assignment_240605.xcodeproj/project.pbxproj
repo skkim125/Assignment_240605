@@ -15,10 +15,11 @@
 		048FA2D22C102A5D009C7A9B /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 048FA2D12C102A5D009C7A9B /* SnapKit */; };
 		048FA2D52C102A7E009C7A9B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 048FA2D42C102A7E009C7A9B /* Alamofire */; };
 		048FA2D72C1062D8009C7A9B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 048FA2D62C1062D8009C7A9B /* .gitignore */; };
-		048FA2DB2C10637C009C7A9B /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2DA2C10637C009C7A9B /* APIKey.swift */; };
 		048FA2DF2C116CCD009C7A9B /* BoxOfficeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2DE2C116CCD009C7A9B /* BoxOfficeViewController.swift */; };
 		048FA2E12C1179FD009C7A9B /* BoxOfficeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2E02C1179FD009C7A9B /* BoxOfficeTableViewCell.swift */; };
 		048FA2E32C117A92009C7A9B /* IdentifierProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2E22C117A92009C7A9B /* IdentifierProtocol.swift */; };
+		048FA2E52C1199C4009C7A9B /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2E42C1199C3009C7A9B /* BoxOffice.swift */; };
+		048FA2E72C11AA2F009C7A9B /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048FA2E62C11AA2F009C7A9B /* APIKeys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,10 +31,11 @@
 		048FA2C82C1029A6009C7A9B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		048FA2CA2C1029A6009C7A9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		048FA2D62C1062D8009C7A9B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		048FA2DA2C10637C009C7A9B /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		048FA2DE2C116CCD009C7A9B /* BoxOfficeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeViewController.swift; sourceTree = "<group>"; };
 		048FA2E02C1179FD009C7A9B /* BoxOfficeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeTableViewCell.swift; sourceTree = "<group>"; };
 		048FA2E22C117A92009C7A9B /* IdentifierProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierProtocol.swift; sourceTree = "<group>"; };
+		048FA2E42C1199C3009C7A9B /* BoxOffice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOffice.swift; sourceTree = "<group>"; };
+		048FA2E62C11AA2F009C7A9B /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +77,8 @@
 				048FA2DE2C116CCD009C7A9B /* BoxOfficeViewController.swift */,
 				048FA2E02C1179FD009C7A9B /* BoxOfficeTableViewCell.swift */,
 				048FA2E22C117A92009C7A9B /* IdentifierProtocol.swift */,
-				048FA2DA2C10637C009C7A9B /* APIKey.swift */,
+				048FA2E42C1199C3009C7A9B /* BoxOffice.swift */,
+				048FA2E62C11AA2F009C7A9B /* APIKeys.swift */,
 				048FA2C52C1029A6009C7A9B /* Assets.xcassets */,
 				048FA2C72C1029A6009C7A9B /* LaunchScreen.storyboard */,
 				048FA2CA2C1029A6009C7A9B /* Info.plist */,
@@ -165,10 +168,11 @@
 				048FA2E32C117A92009C7A9B /* IdentifierProtocol.swift in Sources */,
 				048FA2C12C1029A4009C7A9B /* LottoViewController.swift in Sources */,
 				048FA2DF2C116CCD009C7A9B /* BoxOfficeViewController.swift in Sources */,
+				048FA2E72C11AA2F009C7A9B /* APIKeys.swift in Sources */,
 				048FA2BD2C1029A4009C7A9B /* AppDelegate.swift in Sources */,
-				048FA2DB2C10637C009C7A9B /* APIKey.swift in Sources */,
 				048FA2BF2C1029A4009C7A9B /* SceneDelegate.swift in Sources */,
 				048FA2E12C1179FD009C7A9B /* BoxOfficeTableViewCell.swift in Sources */,
+				048FA2E52C1199C4009C7A9B /* BoxOffice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

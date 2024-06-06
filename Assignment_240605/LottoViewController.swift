@@ -144,7 +144,7 @@ class LottoViewController: UIViewController {
     }()
     
     var numbers: [Int] = []
-    var round: Int = APIKey.round
+    var round: Int = LottoAPIKey.round
     
     lazy var numberViews: [UIView] = [numberlabel1, numberlabel2, numberlabel3, numberlabel4, numberlabel5, numberlabel6, plusView, numberlabel7]
     
@@ -231,7 +231,7 @@ class LottoViewController: UIViewController {
     }
     
     @objc func getLottoInfo() {
-        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(APIKey.round)"
+        let url = LottoAPIKey.lottoURL + "\(LottoAPIKey.round)"
         
         AF.request(url).responseDecodable(of: Lotto.self) { response in
             switch response.result {
@@ -252,7 +252,6 @@ class LottoViewController: UIViewController {
                 self.roundTextField.placeholder = "유효한 숫자만 입력해주세요"
             }
         }
-        
     }
 }
 
@@ -270,14 +269,10 @@ struct Lotto: Decodable {
 
 extension LottoViewController: UITextFieldDelegate {
     
-    
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let text = textField.text {
-            APIKey.round = Int(text) ?? 0
+            LottoAPIKey.round = Int(text) ?? 0
             getLottoInfo()
         }
     }
-    
-    
 }
